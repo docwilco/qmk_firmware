@@ -3,17 +3,23 @@
 
 #include QMK_KEYBOARD_H
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT(
-        QK_MIDI_NOTE_G_SHARP_0, QK_MIDI_NOTE_A_0, QK_MIDI_NOTE_A_SHARP_0, QK_MIDI_NOTE_B_0,
-        QK_MIDI_NOTE_C_1, QK_MIDI_NOTE_C_SHARP_1, QK_MIDI_NOTE_D_1, QK_MIDI_NOTE_D_SHARP_1
-    )
-};
+extern MidiDevice midi_device;
+extern midi_config_t midi_config;
+extern debug_config_t debug_config;
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {[0] = LAYOUT(
+    MI_Gs, MI_A, MI_As, MI_B, MI_C1, MI_Cs1, MI_D1, MI_Ds1
+)};
 
 void keyboard_post_init_user(void) {
-  // Customise these values to desired behaviour
-  debug_enable=true;
-  debug_matrix=true;
-  //debug_keyboard=true;
-  //debug_mouse=true;
+    /* turn off octave shifting so the above notes are not translated */
+    midi_config.octave = QK_MIDI_OCTAVE_0 - MIDI_OCTAVE_MIN;
+
+    rgb_matrix_enable_noeeprom();
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_BREATHING);
+    //debug_config.enable = true;
+    //debug_config.matrix = true;
+    //debug_config.keyboard = true;
+    //debug_config.mouse = true;
+
 }

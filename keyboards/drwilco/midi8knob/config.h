@@ -3,6 +3,9 @@
 
 #pragma once
 
+/* Needed for direct note keycodes */
+#define MIDI_ADVANCED
+
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
