@@ -6,7 +6,7 @@
 extern debug_config_t debug_config;
 
 enum my_keycodes {
-    KC_ENC1A = SAFE_RANGE,
+    KC_ENC1A = QK_USER,
     KC_ENC1B,
 };
 
