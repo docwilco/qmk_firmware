@@ -26,7 +26,7 @@ plugging in.
 ## Wiring diagram
 ![Alt text](wiring_diagram.png)
 
-If you're using the `info.json` as is, wire the above diagram to your Pico like
+If you're using the `keyboard.json` as is, wire the above diagram to your Pico like
 this:
 
 * `COL0` -> `GP22`
@@ -34,8 +34,8 @@ this:
 * `ROW1` -> `GP20`
 * `ROW2` -> `GP21`
 
-Of course, you can wire it up any way you want if you change info.json. You can
-even put in a different microcontroller. Just adjust `info.json` accordingly.
+Of course, you can wire it up any way you want if you change keyboard.json. You can
+even put in a different microcontroller. Just adjust `keyboard.json` accordingly.
 
 ## General Info
 
@@ -46,11 +46,11 @@ even put in a different microcontroller. Just adjust `info.json` accordingly.
 ## Building and flashing
 Make example for this keyboard (after setting up your build environment):
 
-    qmk compile -kb handwired/onekey/encoder_matrix
+    qmk compile -kb handwired/encoder_matrix
 
 Flashing example for this keyboard:
 
-    qmk flash -kb handwired/onekey/encoder_matrix
+    qmk flash -kb handwired/encoder_matrix
 
 See the [build environment
 setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make
