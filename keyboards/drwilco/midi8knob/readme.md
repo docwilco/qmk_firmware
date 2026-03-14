@@ -1,6 +1,6 @@
 # DocWilco MIDI 8 Knob
 
-![drwilco/midi8knob](imgur.com image replace me!)
+
 
 This is the firmware for my MIDI 8 Knob project. It has 8 rotary encoders with built in switches (Bourns PEC11R-xxxxx-Sxxxx, my favorite being the PEC11R-4215F-S0024) and 8 LEDs (WS2812B). It is meant to be used as a MIDI controller for things like MIDI Mixer. 
 

@@ -1,3 +1,6 @@
+// Copyright 2023 DocWilco (@DocWilco)
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 #include "quantum.h"
 
 fast_timer_t previous = 0;
