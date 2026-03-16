@@ -22,6 +22,7 @@ void encoder_driver_task(void) {}
 
 void keyboard_post_init_kb(void) {
     debug_enable = true;
+    debug_matrix = true;
     keyboard_post_init_user();
 }
 
