@@ -1,18 +1,22 @@
-# encoder_onekey
+# encoder_matrix
 
-While technically not a keyboard, this demonstrates two rotary encoders wired
+While technically not a keyboard, this demonstrates three rotary encoders wired
 into the keyboard matrix, while still using QMK's encoder subsystem for proper
 encoder event handling.
 
 Encoder 1 is wired to `[0, 1]` and `[0, 2]`, encoder 2 to `[0, 4]` and `[0, 5]`,
 and encoder 3 to `[1, 4]` and `[1, 5]` (sharing A/B columns with encoder 2 on a
-different row). The
-keyboard-level code in `encoder_matrix.c` decodes the quadrature signals from
-matrix key events and feeds them into QMK's encoder queue via
-`encoder_queue_event()`. The `encoder_update_kb()` function then sends
-velocity-sensitive MIDI CC messages (relative encoding, CC 0x10+).
+different row). Each encoder also has a switch: encoder 1 at `[0, 0]`, encoder 2
+at `[0, 3]`, and encoder 3 at `[1, 3]`.
 
-The switch part is wired to `[0, 0]` for bootmagic purposes. An encoder without
+The custom encoder driver in `encoder_matrix.c` reads the quadrature signals
+directly from the debounced matrix via `peek_matrix()`, bypassing
+`MATRIX_MASKED` so the encoder positions don't generate key events. It feeds
+rotation events into QMK's encoder queue via `encoder_queue_event()`. The
+`encoder_update_kb()` function then sends velocity-sensitive MIDI CC messages
+(relative encoding, CC 0x10+).
+
+The encoder switch at `[0, 0]` doubles as the bootmagic key. An encoder without
 detents might be "pressing down" a key because only 1 out of 4 states is _not_
 connecting A or B to C. And 2 out of 4 will connect a specific terminal, so if A
 or B are wired to `[0, 0]` there's a 50% chance of triggering bootmagic when
@@ -21,8 +25,8 @@ plugging in.
 ## Wiring diagram
 ![Alt text](wiring_diagram.png)
 
-If you're using the `keyboard.json` as is, wire the above diagram to your STM32G431
-like this:
+If you're using the `keyboard.json` as is, wire the above diagram to your
+STM32G431 like this:
 
 * `COL0` -> `B10` (encoder 1 switch)
 * `COL1` -> `A15` (encoder 1 A)
@@ -33,14 +37,24 @@ like this:
 * `ROW0` -> `B12` (encoder 1+2 C / common)
 * `ROW1` -> `B14` (encoder 3 C / common)
 
-Of course, you can wire it up any way you want if you change keyboard.json. You can
-even put in a different microcontroller. Just adjust `keyboard.json` accordingly.
+Because there's a 50% chance for each encoder terminal to act like a closed
+switch, we need NKRO enabled, and diodes on one side of every switch and all
+encoder A/B terminals to prevent ghosting. The matrix is `COL2ROW`, so place
+diodes between the column wire and the switch/encoder terminals. With the
+cathode (band) toward the terminal, and the anode toward the column wire. The C
+terminal on the encoders and the other side of the switch can be wired directly
+to the row wire.
+
+Of course, you can wire it up any way you want if you change keyboard.json. You
+can even put in a different microcontroller. Just adjust `keyboard.json`
+accordingly.
 
 ## General Info
 
 * Keyboard Maintainer: [DocWilco](https://github.com/DocWilco)
 * Hardware Supported: Handwired STM32G431 & any rotary encoder. Built in
-  switch is optional, but don't put it on `[0, 0]`, see above.
+  switches are optional, but don't put an encoder's A or B on `[0, 0]`, see
+  above.
 
 ## Building and flashing
 Make example for this keyboard (after setting up your build environment):
@@ -61,7 +75,7 @@ Guide](https://docs.qmk.fm/#/newbs).
 
 Enter the bootloader in 3 ways:
 
-* **Bootmagic reset**: Hold down the rotary encoder and plug in the keyboard
-* **Physical bootsel button**: Hold the button on the Raspberry Pi Pico (near
-  the USB port) and plug in the keyboard.
-* **Keycode in layout**: Map the switch to `QK_BOOT` instead of `QK_ESC` in `keymap.c`
+* **Bootmagic reset**: Hold down encoder 1's switch and plug in the keyboard
+* **Physical BOOT0 button**: Hold the BOOT0 button on the STM32G431 board and
+  plug in (or press reset while holding BOOT0).
+* **Keycode in layout**: Map a switch to `QK_BOOT` in `keymap.json`

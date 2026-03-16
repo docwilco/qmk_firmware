@@ -3,6 +3,6 @@
     "keymap": "default",
     "layout": "LAYOUT",
     "layers": [
-        ["KC_ESC", "QK_KB_0", "QK_KB_1", "KC_PGUP", "QK_KB_2", "QK_KB_3", "KC_PGDN", "QK_KB_4", "QK_KB_5"]
+        ["KC_ESC", "KC_PGUP", "KC_PGDN"]
     ]
 }

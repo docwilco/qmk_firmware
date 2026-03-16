@@ -3,22 +3,60 @@
 
 #include "quantum.h"
 
-// Keyboard-level custom keycodes for matrix-wired encoder pins
-enum encoder_matrix_keycodes {
-    ENC1_A = QK_KB_0,
-    ENC1_B,
-    ENC2_A,
-    ENC2_B,
-    ENC3_A,
-    ENC3_B,
-};
+// Prototype quadrature_matrix encoder driver:
+// Reads encoder A/B pin states directly from the debounced key matrix
+// via peek_matrix(), bypassing MATRIX_MASKED so the encoder positions
+// don't generate key events.
+
+extern bool peek_matrix(uint8_t row_index, uint8_t col_index, bool raw);
 
 #define NUM_MATRIX_ENCODERS 3
 
-// Custom encoder driver stubs — encoder events are queued from
-// process_record_kb when the matrix detects encoder pin changes.
+typedef struct {
+    uint8_t row_a;
+    uint8_t col_a;
+    uint8_t row_b;
+    uint8_t col_b;
+} encoder_matrix_pin_t;
+
+// Matrix positions for each encoder's quadrature pins
+static const encoder_matrix_pin_t encoder_matrix_pins[NUM_MATRIX_ENCODERS] = {
+    {0, 1, 0, 2}, // Encoder 0: A=[0,1], B=[0,2]
+    {0, 4, 0, 5}, // Encoder 1: A=[0,4], B=[0,5]
+    {1, 4, 1, 5}, // Encoder 2: A=[1,4], B=[1,5]
+};
+
+// Previous pin states for quadrature decoding
+static bool prev_a[NUM_MATRIX_ENCODERS];
+static bool prev_b[NUM_MATRIX_ENCODERS];
+static bool state_initialized = false;
+
 void encoder_driver_init(void) {}
-void encoder_driver_task(void) {}
+
+void encoder_driver_task(void) {
+    for (uint8_t i = 0; i < NUM_MATRIX_ENCODERS; i++) {
+        const encoder_matrix_pin_t *pins = &encoder_matrix_pins[i];
+
+        bool a = peek_matrix(pins->row_a, pins->col_a, false);
+        bool b = peek_matrix(pins->row_b, pins->col_b, false);
+
+        if (state_initialized) {
+            if (a != prev_a[i]) {
+                // A changed: clockwise when A differs from B
+                encoder_queue_event(i, a != b);
+            }
+            if (b != prev_b[i]) {
+                // B changed: clockwise when A matches B
+                encoder_queue_event(i, a == b);
+            }
+        }
+
+        prev_a[i] = a;
+        prev_b[i] = b;
+    }
+
+    state_initialized = true;
+}
 
 void keyboard_post_init_kb(void) {
     debug_enable = true;
@@ -26,48 +64,7 @@ void keyboard_post_init_kb(void) {
     keyboard_post_init_user();
 }
 
-// Quadrature state tracking per encoder
-static bool enc_a_pressed[NUM_MATRIX_ENCODERS] = {false};
-static bool enc_b_pressed[NUM_MATRIX_ENCODERS] = {false};
-static bool enc_state_initialized = false;
-
-// Set the initialized flag after the first matrix scan completes,
-// so we don't interpret the initial state as rotation.
-void housekeeping_task_kb(void) {
-    if (!enc_state_initialized) {
-        enc_state_initialized = true;
-    }
-}
-
-static void handle_encoder_a(uint8_t index, bool pressed) {
-    enc_a_pressed[index] = pressed;
-    if (enc_state_initialized) {
-        // When A changes, clockwise if B is different
-        encoder_queue_event(index, enc_a_pressed[index] != enc_b_pressed[index]);
-    }
-}
-
-static void handle_encoder_b(uint8_t index, bool pressed) {
-    enc_b_pressed[index] = pressed;
-    if (enc_state_initialized) {
-        // When B changes, clockwise if A is the same
-        encoder_queue_event(index, enc_a_pressed[index] == enc_b_pressed[index]);
-    }
-}
-
-bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case ENC1_A: handle_encoder_a(0, record->event.pressed); return false;
-        case ENC1_B: handle_encoder_b(0, record->event.pressed); return false;
-        case ENC2_A: handle_encoder_a(1, record->event.pressed); return false;
-        case ENC2_B: handle_encoder_b(1, record->event.pressed); return false;
-        case ENC3_A: handle_encoder_a(2, record->event.pressed); return false;
-        case ENC3_B: handle_encoder_b(2, record->event.pressed); return false;
-    }
-    return process_record_user(keycode, record);
-}
-
-// MIDI encoder behavior (velocity-sensitive, from midi8knob)
+// MIDI encoder behavior (velocity-sensitive)
 static fast_timer_t previous[NUM_MATRIX_ENCODERS] = {0};
 
 extern MidiDevice midi_device;
