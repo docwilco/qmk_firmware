@@ -1,0 +1,40 @@
+{
+    "manufacturer": "DocWilco",
+    "keyboard_name": "encoder_matrix",
+    "maintainer": "DocWilco",
+    "bootloader": "stm32-dfu",
+    "diode_direction": "COL2ROW",
+    "encoder": {
+        "driver": "custom",
+        "rotary": [
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN"},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN"},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN"}
+        ]
+    },
+    "features": {
+        "bootmagic": true,
+        "console": true,
+        "encoder": true,
+        "nkro": true
+    },
+    "matrix_pins": {
+        "cols": ["B10", "A15", "B4", "A5", "A9", "C11"],
+        "rows": ["B12", "B14"]
+    },
+    "processor": "STM32G431",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x0000",
+        "vid": "0xFEED"
+    },
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+                {"matrix": [0, 0], "x": 0, "y": 0},
+                {"matrix": [0, 3], "x": 3, "y": 0},
+                {"matrix": [1, 3], "x": 3, "y": 1}
+            ]
+        }
+    }
+}

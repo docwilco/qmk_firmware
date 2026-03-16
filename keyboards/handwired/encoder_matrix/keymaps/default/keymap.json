@@ -1,0 +1,8 @@
+{
+    "keyboard": "handwired/encoder_matrix",
+    "keymap": "default",
+    "layout": "LAYOUT",
+    "layers": [
+        ["KC_ESC", "KC_PGUP", "KC_PGDN"]
+    ]
+}
