@@ -2,7 +2,7 @@
     "manufacturer": "DocWilco",
     "keyboard_name": "DocWilco's MIDI 8 knob",
     "maintainer": "DocWilco",
-    "bootloader": "rp2040",
+    "bootloader": "stm32-dfu",
     "diode_direction": "COL2ROW",
     "features": {
         "bootmagic": true,
@@ -14,7 +14,7 @@
         "nkro": true,
         "rgb_matrix": true
     },
-    "processor": "RP2040",
+    "processor": "STM32G431",
     "usb": {
         "device_version": "1.0.0",
         "pid": "0x0808",
@@ -22,19 +22,19 @@
     },
 "encoder": {
         "rotary": [
-            {"pin_a": "GP25", "pin_b": "GP24", "resolution": 1},
-            {"pin_a": "GP23", "pin_b": "GP22", "resolution": 1},
-            {"pin_a": "GP15", "pin_b": "GP14", "resolution": 1},
-            {"pin_a": "GP12", "pin_b": "GP11", "resolution": 1},
-            {"pin_a": "GP2", "pin_b": "GP3", "resolution": 1},
-            {"pin_a": "GP0", "pin_b": "GP1", "resolution": 1},
-            {"pin_a": "GP6", "pin_b": "GP7", "resolution": 1},
-            {"pin_a": "GP8", "pin_b": "GP9", "resolution": 1}
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1}
         ]
     },
     "matrix_pins": {
-        "cols": ["GP20", "GP19", "GP5", "GP10"],
-        "rows": ["GP18", "GP4"]
+        "cols": ["NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN"],
+        "rows": ["NO_PIN", "NO_PIN"]
     },
     "layouts": {
         "LAYOUT": {
@@ -103,8 +103,8 @@
         ]
     },
     "ws2812": {
-        "pin": "GP16",
-        "driver": "vendor"
+        "pin": "A7",
+        "driver": "pwm"
     }
 
 }
