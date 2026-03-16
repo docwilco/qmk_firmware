@@ -22,7 +22,7 @@
     },
 "encoder": {
         "rotary": [
-            {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
+            {"pin_a": "A15", "pin_b": "B4", "resolution": 1},
             {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
             {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},
             {"pin_a": "NO_PIN", "pin_b": "NO_PIN", "resolution": 1},

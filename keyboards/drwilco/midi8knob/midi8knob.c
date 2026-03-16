@@ -3,6 +3,11 @@
 
 #include "quantum.h"
 
+void keyboard_post_init_kb(void) {
+    debug_enable = true;
+    keyboard_post_init_user();
+}
+
 fast_timer_t previous = 0;
 
 extern MidiDevice midi_device;
@@ -26,6 +31,6 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
         amount = 8;
     }
     midi_send_cc(&midi_device, 0, 0x10 + index, (clockwise ? 0 : 64) + amount);
-    dprintf("Encoder %d: %s %lu\n", index, clockwise ? "CW" : "CCW", diff);
+    dprintf("Encoder %d: %s %lu %d\n", index, clockwise ? "CW" : "CCW", diff, amount);
     return false;
 }
